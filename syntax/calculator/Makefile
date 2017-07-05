@@ -1,7 +1,14 @@
-all: lex.yy.c lexer.out
+default: parser clean
 
-lex.yy.c: logic.l
-	flex logic.l
+keep: parser
 
-lexer.out: lex.yy.c
-	gcc -lfl lex.yy.c -o lexer.out
+lex.yy.c: lexer.l
+	flex $<
+logic.tab.h: parser.y
+	bison -d $<
+
+parser: lex.yy.c parser.tab.h
+	gcc -lfl lex.yy.c parser.tab.c -o $@
+
+clean: 
+	rm lex.yy.c parser.tab.h parser.tab.c
