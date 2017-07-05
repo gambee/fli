@@ -15,16 +15,22 @@ void yyerror(char const *s)
 
 %%
 
-expr: 	expr conn expr
-	| "(" expr ")"
-	| "(" NEGTN VALUE ")"
-	| VALUE
+formula:
+		expression
+	|	NEGTN expression
+	|	expression connective expression
 ;
 
-conn:	CONDT
-	| BICND
-	| CJNCT
-	| DJNCT
+expression:
+		VALUE
+	|	"(" formula ")"
+;
+
+connective:
+		CONDT
+	|	BICND
+	|	CJNCT
+	|	DJNCT
 ;
 
 %%

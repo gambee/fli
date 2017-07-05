@@ -3,13 +3,52 @@
 %}
 %%
 [ \t\n]		;
+
 "(" | 
-")" 		{ return yytext[0]; }
-"->"		{ return CONDT; }
-"<->"		{ return BICND; }
-"^"		{ return CJNCT; }
-"v"		{ return DJNCT; }
-"~"		{ return NEGTN; }
-[TF]		{ yylval = yytext[0] == 'T' ? 1 : 0; return VALUE; }
+")" 	{	/*DB fprintf(stderr, "\'%c\' ", *yytext); DB*/
+		return *yytext;	
+	}
+
+"->"	{ 	/*DB fprintf(stderr,
+				//DB_TKN "CONDT "
+				//DB_TXT "\'->\' "
+		); DB*/
+		return CONDT;
+	}
+
+"<->"	{	/*DB fprintf(stderr,
+			//DB_TKN "BICND "
+			//DB_TXT "\'<->\' "
+		); DB*/
+		return BICND;
+	}
+
+"^"	{	/*DB fprintf(stderr,
+			//DB_TKN "CJCNT "
+			//DB_TXT "\'^\' "
+		); DB*/
+		return CJNCT;
+	}
+
+"v"	{	/*DB fprintf(stderr,
+			//DB_TKN "dJCNT "
+			//DB_TXT "\'v\' "
+		); DB*/
+		return DJNCT;
+	}
+
+"~"	{	/*DB fprintf(stderr, "\'~\' "); DB*/
+		return *yytext;
+	}
+
+[TF]	{	/*DB fprintf(stderr, "VALUE "); DB*/
+		yylval = yytext[0] == 'T' ? 1 : 0;
+		return VALUE;
+	}
+
+.+	{
+		fprintf(stderr, "ERROR: lexer.l: Unrecognized Token: %s\nParse Process Terminating...\n", yytext);
+		return 0;
+	}
 %%
 

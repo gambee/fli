@@ -1,14 +1,19 @@
+
+
+
 default: parser clean
 
-keep: parser
+parser: lex.yy.c bisonFiles
+	gcc -lfl lex.yy.c parser.tab.c -o $@
 
 lex.yy.c: lexer.l
 	flex $<
-logic.tab.h: parser.y
+
+bisonFiles: parser.y
 	bison -d $<
 
-parser: lex.yy.c parser.tab.h
-	gcc -lfl lex.yy.c parser.tab.c -o $@
+parser.output:
+	bison -v parser.y
 
 clean: 
 	rm lex.yy.c parser.tab.h parser.tab.c
