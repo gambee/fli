@@ -1,6 +1,3 @@
-
-
-
 default: parser clean
 
 parser: lex.yy.c bisonFiles

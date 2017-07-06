@@ -1,5 +1,6 @@
 %{
 #include <stdio.h>
+#include <stdlib.h>
 int yylex(void);
 
 void yyerror(char const *s)
@@ -8,22 +9,24 @@ void yyerror(char const *s)
 }
 /* Tokens */
 %}
+%union {
+	int i;
+	struct node* root;
 
-
-%token CONDT BICND CJNCT DJNCT NEGTN
+%token CONDT BICND CJNCT DJNCT
 %token VALUE
 
 %%
 
 formula:
 		expression
-	|	NEGTN expression
-	|	expression connective expression
+	|	'~' expression
+	|	expression connective expression { $$ = new_node(
 ;
 
 expression:
 		VALUE
-	|	"(" formula ")"
+	|	'(' formula ')'
 ;
 
 connective:
@@ -34,6 +37,8 @@ connective:
 ;
 
 %%
+
+#include "ast.h"
 
 int main(int argc, char **argv)
 {
