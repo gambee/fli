@@ -32,6 +32,7 @@ char* get_token_text(int tokenType)
 			return NULL;
 	}
 }
+
 struct node
 {
 	int tokenType;
