@@ -12,5 +12,8 @@ bisonFiles: parser.y
 parser.output:
 	bison -v parser.y
 
+ast: ast.dot
+	dot -Tsvg ast.dot > ast.svg
+
 clean: 
 	rm lex.yy.c parser.tab.h parser.tab.c

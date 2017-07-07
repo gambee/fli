@@ -1,6 +1,10 @@
 %{
 #include <stdio.h>
 #include <stdlib.h>
+#include "ast.h"
+struct node* ast_root;
+
+
 int yylex(void);
 
 void yyerror(char const *s)
@@ -9,39 +13,50 @@ void yyerror(char const *s)
 }
 /* Tokens */
 %}
-%union {
-	int i;
-	struct node* root;
 
-%token CONDT BICND CJNCT DJNCT
-%token VALUE
+%union{
+	struct node* node_ptr;
+	int tokenType;
+}
 
+%token <tokenType> CONDT BICND CJNCT DJNCT
+%type <node_ptr> formula expr
+%type <tokenType> value conn
 %%
+
+start: formula {ast_root = $1;}
+;
 
 formula:
-		expression
-	|	'~' expression
-	|	expression connective expression { $$ = new_node(
+		expr		{$$ = $1;}
+	|	'~' expr 	{$$ = new_node('~', $2, NULL);}
+	|	expr conn expr	{$$ = new_node($2, $1, $3);}
 ;
 
-expression:
-		VALUE
-	|	'(' formula ')'
+expr:
+		value		{$$ = new_node($1, NULL, NULL); }
+	|	'(' formula ')'	{$$ = $2;}
 ;
 
-connective:
-		CONDT
-	|	BICND
-	|	CJNCT
-	|	DJNCT
+conn:
+		CONDT		{$$ = CONDT;}
+	|	BICND		{$$ = BICND;}
+	|	CJNCT		{$$ = CJNCT;}
+	|	DJNCT		{$$ = DJNCT;}
+;
+
+value: 'T'			{$$ = (int) 'T';}
+     | 'F'			{$$ = (int) 'F';}
 ;
 
 %%
-
-#include "ast.h"
 
 int main(int argc, char **argv)
 {
 	yyparse();
+	if(argc == 2)
+		save_as_dot(argv[1], ast_root);
+	else
+		print_as_dot(stdout, ast_root);
 	return 0;
 }

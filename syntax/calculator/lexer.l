@@ -31,7 +31,7 @@
 	}
 
 "v"	{	/*DB fprintf(stderr,
-			//DB_TKN "dJCNT "
+			//DB_TKN "DJCNT "
 			//DB_TXT "\'v\' "
 		); DB*/
 		return DJNCT;
@@ -41,12 +41,11 @@
 		return *yytext;
 	}
 
-[TF]	{	/*DB fprintf(stderr, "VALUE "); DB*/
-		yylval = yytext[0] == 'T' ? 1 : 0;
-		return VALUE;
+[TF]	{
+		return *yytext;
 	}
 
-.+	{
+.	{
 		fprintf(stderr, "ERROR: lexer.l: Unrecognized Token: %s\nParse Process Terminating...\n", yytext);
 		return 0;
 	}
