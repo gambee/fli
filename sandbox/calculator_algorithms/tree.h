@@ -36,6 +36,7 @@ char* get_token_text(int tokenType)
 struct node
 {
 	int tokenType;
+	int tokenValue;
 	struct node *left, *right;
 };
 

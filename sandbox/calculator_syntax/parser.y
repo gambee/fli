@@ -16,12 +16,12 @@ void yyerror(char const *s)
 
 %union{
 	struct node* node_ptr;
-	int tokenType;
+	int token_type;
 }
 
-%token <tokenType> CONDT BICND CJNCT DJNCT
+%token <token_type> CONDT BICND CJNCT DJNCT
 %type <node_ptr> formula expr
-%type <tokenType> value conn
+%type <token_type> value conn
 %%
 
 start: formula {ast_root = $1;}
@@ -53,10 +53,16 @@ value: 'T'			{$$ = (int) 'T';}
 
 int main(int argc, char **argv)
 {
+/*
 	yyparse();
 	if(argc == 2)
 		save_as_dot(argv[1], ast_root);
 	else
 		print_as_dot(stdout, ast_root);
+*/
+	struct node tmp;
+	printf("ret of set_token_value(&tmp, 5)\n", set_token_value(&tmp, 5));
+	printf("value of tmp.token_value: %d\n", tmp.token_value);
+	printf("ret of set_token_value(NULL, 12): %d\n", set_token_value(NULL, 12));
 	return 0;
 }
