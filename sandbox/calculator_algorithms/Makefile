@@ -1,4 +1,2 @@
-all: main
-
-main: main.c ast.h
-	gcc main.c -o main
+dot:pdt.dot
+	dot -Tsvg pdt.dot >pdt.svg

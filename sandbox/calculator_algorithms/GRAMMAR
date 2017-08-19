@@ -1,0 +1,21 @@
+The 'Sentential Logic Unit' subproject is intended to capture a similar notion to 
+the 'Arithmetic Logic Unit' present in most modern computers. Since the fundamental
+structure of the expressions being evaluated is different, there must be a special 
+consideration of these expressions for a 'logic interpreter'. The intention for the 
+time being is to implement a basic stack-based sentential logical expression evaluator.
+Akin to a stack-based arithmetic calculator. Thus, postfix operator notation will be used
+for the purposes of parenthesis-freeness. 
+
+The stings that will be processed by the SLU will have the following input alphabet:
+input_alphabet := { F, T, IF, IFF, AND, OR, NOT }
+Where 'F', 'T', 'IF', 'IFF', 'AND', 'OR', and 'NOT' are identifiers/macros for integer values. 
+Thus, the SLU will be constructed as a Push Down Transducer, whos inputs are expressions of
+sentential logic in reverse polish notation, without variables (i.e. all truth values are explicit).
+The output of the transducer (if any) will be either 'T' or 'F'. If no output is received, then the 
+input expression was not well formed. Thus the ending state of the SLU Automoton will not be one 
+of the accepting 'Final' states when the process terminates. 
+
+The SLU Automoton will operated as follows: Truth values are pushed onto the stack. If an operation
+symbol is read, then the last two values on the stack are popped, the operation is applied to the 
+values (or value if the operation is negation), and the result of the evalutated expression is pushed 
+back onto the stack. Then operation continues. 
