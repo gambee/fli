@@ -13,9 +13,14 @@
 #include "fli_stack.h"
 
 
-char
+
+
+
 int SLEE_eval(char* expr, char* result)
 {
 	STK_stack stack;
 	STK_init(stack);
+
+}
+	
 
