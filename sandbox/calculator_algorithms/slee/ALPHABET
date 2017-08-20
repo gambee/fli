@@ -1,0 +1,73 @@
+The Input Alphabet To SLEE
+
+The binary representation of the input alphabet is somewhat arbitrary, 
+however there are some foreseeable features that allow for 'low-hanging-fruit'
+sorts of optimizations. The ability to use string.h functions could be a huge
+plus (maybe), which mostly restricts the use of the null-terminating '\0'
+character (SEGFAULTS!! :-/ ), but it could also be nice for the purposes of 
+testing to have all of the characters be printable. This would allow writing a
+VERY simple test apparatus which merely passes line-seperated expression (i.e.
+by the Getline library used by many terminals, or a file which contains only
+one sentential logic expression per line), recieved via stdin, to the
+evalutator subroutine, which then prints the results to stdout, line-seperated
+in the same manner as the input, and each line no. should correspond to both
+the input file's expression and the result in the output file. 
+
+For this reason, I think the best course of action is to find single character
+representations of each of the tokens that most closely resembles (or atleast
+is easily interpretted as) the expanded token text.
+
+	For the single character tokens, this of course is a trivial task:
+
+Negation:		'~' or '!' or '-'
+Disjunction:	'v' or '|' or '+'
+Conjucntion:	'^' or '&' or '*'
+True:			'T' or 't' or '1' 
+False:			'F' or 'f' or '0'
+
+	For the multicharacter tokens, it becomes more obscure:
+
+Conditional:	'>' or '?' or '%'	(there is no arithmetic equiv. op)
+									(the mod operator is interesting...)
+Biconditional:	'=' or '_' ...
+
+	Possibilites:
+
+Arithmetic-like (v1):			-, +, *, 1, 0, %, = 
+Arithmetic-like (v2):			-, +, *, 1, 0, >, = // > looks like greater
+Arithmetic-like (v3):			-, +, *, 1, 0, <, = // < less is more accurate
+
+logic-like (sentential v1):		~, v, ^, T, F, >, = // t,f and tolower?
+logic-like (sentential v2):		~, v, ^, T, F, -, _ // T,F and toupper?
+logic-like (sentential v3):		~, v, *, T, F, }, = // } or ] but not )
+	//I don't like v3... nix it
+
+logic-like (bitwise):			!, |, &, 1, 0, ?, = // ? is both a possible 
+													// symbol and an admission
+													// that I don't know what 
+													// to put there.
+
+	Examples:
+
+In the following examples, the expression '(T^T)->((Fv(~T))<->(~T))' is represented
+in reverse polish notation, omitting parenthesis. In the same alphabet as the
+above infix expression, the postfix would be: 'T T ^ F T ~ v T ~ <-> ->'
+
+Arithmetic-like (v1):			'1 1 * 0 1 - + 1 - = %'
+Arithmetic-like (v2):			'1 1 * 0 1 - + 1 - = >'
+Arithmetic-like (v3):			'1 1 * 0 1 - + 1 - = <'
+
+Logic-like (sentential v1):		'T T ^ F T ~ v T ~ = >'
+Logic-like (sentential v2):		'T T ^ F T ~ v T ~ _ -'
+
+Logic-like (bitwise):			'1 1 & 0 1 ! v 1 ! = ?'
+
+	Verdict:
+
+I feel that Arithmetic-like (v3), Logic-like (sentential v1), and
+Logic-like (bitwise) are the three main contenders. Perhaps a macro/define and
+a command line argument/flag can be used to choose between them, or even
+specify custom configurations.
+
+But! For now, I think I will simply bake-in Arithmetic-like (v3) as the SLEE
+alphabet.
