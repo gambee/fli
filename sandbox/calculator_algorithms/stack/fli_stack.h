@@ -3,8 +3,10 @@
  * Max Gambee
  * Copyright 2017
  *
- * Description: A simple stack implementation for char elements. Intended for
- * 	use by the sentential logic expression evaluator of fli.
+ * Description: A simple stack implementation for char elements.
+ *  Originally intended for use by the sentential logic expression evaluator
+ *  of fli, but can by used as a generic byte size stack, (and easily modified
+ *  to other sizes of elements).
  */
 
 #ifndef FLI_STACK_H
@@ -23,7 +25,7 @@
 #	endif
 #else
 #	ifndef STK_SIZE
-#	define STK_SIZE 1016 //sizeof node should be 1024 on x64
+#	define STK_SIZE 244 //sizeof node should be 256 on x64
 #	endif
 #endif
 
