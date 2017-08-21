@@ -18,11 +18,11 @@ digraph pdt{
 
 		label="Main";
 		//push all logical values
-		q0->q1[label="T/e/e"];
-		q1->q0[label="e/T/e"];
+		q0->q1[label="T,e&#8614;e"];
+		q1->q0[label="e,e&#8614;T"];
 
-		q0->q2[label="F/e/e"];
-		q2->q0[label="e/F/e"];
+		q0->q2[label="F,e&#8614;e"];
+		q2->q0[label="e,e&#8614;F"];
 	}
 
 	subgraph cluster_negation{
@@ -33,15 +33,15 @@ digraph pdt{
 			boolean value pushed onto the stack */
 
 		//enter the subroutine on input of '~'
-		q0->n0[label="~/e/e"];
+		q0->n0[label="-,e&#8614;e"];
 
 		//path 1: reverse the value of 'T'
-		n0->n1[label="e/e/T"];
-		n1->q0[label="e/F/e"];
+		n0->n1[label="e,T&#8614;e"];
+		n1->q0[label="e,e&#8614;F"];
 
 		//path 2: reverse the value of 'F'
-		n0->n2[label="e/e/F"];
-		n2->q0[label="e/T/e"];
+		n0->n2[label="e,F&#8614;e"];
+		n2->q0[label="e,e&#8614;T"];
 	}
 
 	subgraph cluster_conditional{
@@ -52,25 +52,25 @@ digraph pdt{
 			them with the result. */
 
 		//enter the subroutine on input of '->'
-		q0->c0[label="->/e/e"];
+		q0->c0[label="<,e&#8614;e"];
 
 		/*	branch 1: pop 'T'	*/
-		c0->c1[label="e/e/T"];
-		c1->c2[label="e/e/T"];//c2 will push 'T' and return to the parent machine
-		c1->c2[label="e/e/F"];//note: the '->' evaluates to 'F' only in the case 'T->F'
+		c0->c1[label="e,T&#8614;e"];
+		c1->c2[label="e,T&#8614;e"];//c2 will push 'T' and return to the parent machine
+		c1->c2[label="e,F&#8614;e"];//note: the '->' evaluates to 'F' only in the case 'T->F'
 
 		/*	branch 2: pop 'F'	*/
-		c0->c3[label="e/e/F"];
+		c0->c3[label="e,F&#8614;e"];
 
 			//sub-branch 1: pop 'T'
-			c3->c4[label="e/T/e"];//the only false result of a '->' expression
+			c3->c4[label="e,T&#8614;e"];//the only false result of a '->' expression
 
 			//sub-branch 2: pop 'F'
-			c3->c2[label="e/F/e"];//'F->F' evaulates to T, so go to c2
+			c3->c2[label="e,F&#8614;e"];//'F->F' evaulates to T, so go to c2
 
 		//the exit states (each pushing a different result onto the stack):
-		c2->q0[label="e/T/e"];
-		c4->q0[label="e/F/e"];
+		c2->q0[label="e,e&#8614;T"];
+		c4->q0[label="e,e&#8614;F"];
 	}
 
 	subgraph cluster_biconditional{
@@ -81,21 +81,21 @@ digraph pdt{
 			them with the result. */
 
 			//enter subroutine on input '<->'
-			q0->b0[label="<->/e/e"];
+			q0->b0[label="=,e&#8614;e"];
 
 			//sub-branch 1: pop 'T'
-			b0->b1[label="e/T/e"];//pop 'T'
-			b1->b3[label="e/T/e"];//b3 will push 'T' as the result of evalutation
-			b1->b4[label="e/F/e"];//b4 will push 'F' as the result of evalutation
+			b0->b1[label="e,T&#8614;e"];//pop 'T'
+			b1->b3[label="e,T&#8614;e"];//b3 will push 'T' as the result of evalutation
+			b1->b4[label="e,F&#8614;e"];//b4 will push 'F' as the result of evalutation
 
 			//sub-branch 2: pop 'F'
-			b0->b2[label="e/F/e"];//pop 'F'
-			b2->b3[label="e/F/e"];
-			b2->b4[label="e/T/e"];
+			b0->b2[label="e,F&#8614;e"];//pop 'F'
+			b2->b3[label="e,F&#8614;e"];
+			b2->b4[label="e,T&#8614;e"];
 
 			//exit states of subroutine (pushes result):
-			b3->q0[label="e/T/e"];
-			b4->q0[label="e/F/e"];
+			b3->q0[label="e,e&#8614;T"];
+			b4->q0[label="e,e&#8614;F"];
 	}
 
 	subgraph cluster_conjunction{
@@ -106,21 +106,21 @@ digraph pdt{
 			them with the result. */
 
 			//enter subroutine  on input '^'
-			q0->a0[label="^/e/e"];
+			q0->a0[label="*,e&#8614;e"];
 
 			//sub-branch 1: 
-			a0->a1[label="e/e/T"]; //pop 'T'
-			a1->a3[label="e/e/T"];
-			a1->a4[label="e/e/F"];
+			a0->a1[label="e,T&#8614;e"]; //pop 'T'
+			a1->a3[label="e,T&#8614;e"];
+			a1->a4[label="e,F&#8614;e"];
 			
 			//sub-branch 2:
-			a0->a2[label="e/e/F"]; //pop 'F'
-			a2->a4[label="e/e/T"];
-			a2->a4[label="e/e/F"];
+			a0->a2[label="e,F&#8614;e"]; //pop 'F'
+			a2->a4[label="e,T&#8614;e"];
+			a2->a4[label="e,F&#8614;e"];
 
 			//exit states of subroutine 
-			a4->q0[label="e/F/e"];
-			a3->q0[label="e/T/e"];
+			a4->q0[label="e,e&#8614;F"];
+			a3->q0[label="e,e&#8614;T"];
 	}
 	
 	subgraph cluster_disjunction{
@@ -131,20 +131,20 @@ digraph pdt{
 			them with the result. */
 
 			//enter subroutine on 'v'
-			q0->d0[label="v/e/e"];
+			q0->d0[label="+,e&#8614;e"];
 
 			//sub-branch 1:
-			d0->d1[label="e/e/T"];//pop 'T'
-			d1->d3[label="e/e/T"];
-			d1->d3[label="e/e/F"];
+			d0->d1[label="e,T&#8614;e"];//pop 'T'
+			d1->d3[label="e,T&#8614;e"];
+			d1->d3[label="e,F&#8614;e"];
 			
 			//sub-branch 2:
-			d0->d2[label="e/e/F"];//pop 'F'
-			d2->d3[label="e/e/T"];
-			d2->d4[label="e/e/F"];//only false result
+			d0->d2[label="e,F&#8614;e"];//pop 'F'
+			d2->d3[label="e,T&#8614;e"];
+			d2->d4[label="e,F&#8614;e"];//only false result
 
 			//exit states:
-			d3->q0[label="e/T/e"];
-			d4->q0[label="e/F/e"];
+			d3->q0[label="e,e&#8614;T"];
+			d4->q0[label="e,e&#8614;F"];
 	}
 }
