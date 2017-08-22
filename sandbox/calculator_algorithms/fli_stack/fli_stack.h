@@ -103,6 +103,9 @@ int STK_pop(struct STK_stack *stk, char *dest)
 
 /* Function: STK_push
  * 		Description: 
+ * 		Returns:	0	:	Success
+ *				   -1	:	Fail - Malloc Error
+ *				   -2	:	Fail - stk == (nil)
  */
 int STK_push(struct STK_stack *stk, char from)
 {
@@ -135,6 +138,36 @@ int STK_push(struct STK_stack *stk, char from)
 	else return -2; //stk == (nil)
 }
 
+/* Function: STK_popall
+ * 		Description: Attempts to popall a characters from the stack and
+ * 			re-initialize top and index to NULL, 0 respectively.
+ * 		Argument(s):	1 : stk - a pointer to an initialized stack structure.
+ * 		Returns:	0 : Success!
+ * 				   -1 : Empty stack.
+ * 				   -2 : stk == (nil)
+ */
+int STK_popall(struct STK_stack *stk)
+{
+	struct STK_node *tmp1, *tmp2;
+
+	if(stk ? (stk->top ? (tmp1 = stk->top, 1) : 0) : 0)
+	{
+		while(tmp1)
+		{
+			tmp2 = tmp1;
+			tmp1 = tmp1->next;
+			free(tmp2);
+		}
+
+		stk->top = NULL;
+		stk->index = 0;
+
+		return 0;
+	}
+	//else
+	
+	return stk ? -1 : -2; //return -1 if empty stack, -2 if stk == (nil)
+}
 
 #ifdef DEBUG
 
