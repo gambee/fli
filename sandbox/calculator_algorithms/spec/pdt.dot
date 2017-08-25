@@ -14,7 +14,7 @@
 
 digraph pdt{
 	compound=true; nodsep=1.0;
-
+		
 	subgraph cluster_main{
 
 		label="Main";
@@ -24,6 +24,21 @@ digraph pdt{
 
 		q0->q2[label="F,e&#8614;e"];
 		q2->q0[label="e,e&#8614;F"];
+	}
+
+	subgraph cluster_success{
+
+		label="Successful Termination States";
+		/* The only successful termination of operatin for this pdt involves
+		 * entering state q0 with a stack containing exactly one element and
+		 * no input symbols left in the input expression.
+		 */
+
+		s1[label="s1,T"];
+		s2[label="s2,F"];
+		q0->s0[label="e,e&#8614;e"];
+		s0->s1[label="e,T&#8614;e"];
+		s0->s2[label="e,F&#8614;e"];
 	}
 
 	subgraph cluster_negation{

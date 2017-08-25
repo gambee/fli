@@ -57,8 +57,8 @@
  * Section: Global Variables *
  *****************************/
 
-static char(*slee_input)(void); 
 static char *slee_expr;
+static char slee_result;
 static struct STK_stack slee_stack;
 	//fail flags:
 static char fail_state;
@@ -157,7 +157,7 @@ void* STATE_d4(void);
 	//Main
 void* STATE_q0(void)
 {
-	switch(slee_input())
+	switch(SLEE_next_symbol())
 	{
 		case '1':
 			return (void *) STATE_q1;
@@ -728,7 +728,6 @@ int SLEE_eval(char* expr, char* result)
 	void* (*cur_state)(void) = STATE_q0;
 
 		//init of args/globals
-	slee_input = SLEE_next_symbol;
 	*result = 'E';
 
 	if(expr ? (slee_expr = expr, 0) : 1)
