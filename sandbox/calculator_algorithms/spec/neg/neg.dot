@@ -149,35 +149,27 @@ digraph pdt{
 			d4->q0[label="e,e&#8614;F"];
 	}
 
-	subgraph cluster_pre_final{
-		label="Pre-Final States"
-		f0;
-		f1;
-		q0->f0[label="e,T&#8614;e"];
-		q0->f1[label="e,F&#8614;e"];
-	}
-
-
-	subgraph cluster_final{
-
-		label="Final States"
+	subgraph cluster_test{
 
 		subgraph cluster_success{
-			label="Success States";
+			label="Final States";
 			/* The only successful termination of operatin for this pdt involves
 			 * entering state q0 with a stack containing exactly one element and
 			 * no input symbols left in the input expression.
 			 */
 
-			s0[label="s0,T"];
-			s1[label="s1,F"];
+			s2[label="s2,T"];
+			s3[label="s3,F"];
 
-			f0->s0[label="e,e&#8614;e"];
-			f1->s1[label="e,e&#8614;e"];
+			q0->s0[label="e,T&#8614;e"];
+			s0->s2[label="e,e&#8614;e"];
+
+			q0->s1[label="e,F&#8614;e"];
+			s1->s3[label="e,e&#8614;e"];
 		}
 
 		subgraph cluster_fail{
-			label="Fail States (E for Error)";
+			label="Fail States";
 			/*	These are the 'sink' states that the pda falls into when any of the
 			 *	sub-autmata routines recieve invalid input or their actions fail
 			 *	for some reason (i.e. they transition to a fail state that
@@ -186,22 +178,22 @@ digraph pdt{
 			 *
 			 */
 
-			Eq [label="E-q"]
-			En [label="E-n"]
-			Ec [label="E-c"]
-			Eb [label="E-b"]
-			Ea [label="E-a"]
-			Ed [label="E-d"]
-			Ef [label="E-f"]
+			Fq [label="F-q"]
+			Fn [label="F-n"]
+			Fc [label="F-c"]
+			Fb [label="F-b"]
+			Fa [label="F-a"]
+			Fd [label="F-d"]
+			Fs [label="F-s"]
 
-			q0->Eq[ltail=cluster_main];
-			n0->En[ltail=cluster_negation];
-			c0->Ec[ltail=cluster_conditional];
-			b0->Eb[ltail=cluster_biconditional];
-			a0->Ea[ltail=cluster_conjunction];
-			d0->Ed[ltail=cluster_disjunction];
-			f0->Ef[label="e,*&#8614;e"];
-			f1->Ef[label="e,*&#8614;e"];
+			q0->Fq[ltail=cluster_main];
+			n0->Fn[ltail=cluster_negation];
+			c0->Fc[ltail=cluster_conditional];
+			b0->Fb[ltail=cluster_biconditional];
+			a0->Fa[ltail=cluster_conjunction];
+			d0->Fd[ltail=cluster_disjunction];
+			s0->Fs[label="e,*&#8614;e"];
+			s1->Fs[label="e,*&#8614;e"];
 		}
 	}
 }

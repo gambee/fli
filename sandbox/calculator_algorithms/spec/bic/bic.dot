@@ -1,0 +1,31 @@
+/* bic.dot
+ *
+ * Max Gambee
+ * Copyright 2017
+ */
+
+digraph cluster_biconditional{
+
+	compound=true; nodsep=1.0;
+
+	label = "Biconditional Operator";
+	/*	When the biconditional operator is the next input symbol, this
+		subgraph cluster_calculates the result of the biconditional expression
+		between the top-most pair of elements on the stack, and replaces
+		them with the result. */
+
+		//sub-branch 1: pop 'T'
+		b0->b1[label="e,T&#8614;e"];//pop 'T'
+		b1->b3[label="e,T&#8614;e"];//b3 will push 'T' as the result of evalutation
+		b1->b4[label="e,F&#8614;e"];//b4 will push 'F' as the result of evalutation
+
+		//sub-branch 2: pop 'F'
+		b0->b2[label="e,F&#8614;e"];//pop 'F'
+		b2->b3[label="e,F&#8614;e"];
+		b2->b4[label="e,T&#8614;e"];
+
+		//exit states of subroutine (pushes result):
+		b3->q0[label="e,e&#8614;T"];
+		b4->q0[label="e,e&#8614;F"];
+}
+	

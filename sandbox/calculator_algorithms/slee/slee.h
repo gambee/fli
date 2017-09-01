@@ -21,32 +21,34 @@
  ********************/
 
 	//Fail States For SLEE PDA:
-#define SLEE_FAIL_q0 0x00
-#define SLEE_FAIL_q1 0x01
-#define SLEE_FAIL_q2 0x02
-#define SLEE_FAIL_n0 0x10
-#define SLEE_FAIL_n1 0x11
-#define SLEE_FAIL_n2 0x12
-#define SLEE_FAIL_c0 0x20
-#define SLEE_FAIL_c1 0x21
-#define SLEE_FAIL_c2 0x22
-#define SLEE_FAIL_c3 0x23
-#define SLEE_FAIL_c4 0x24
-#define SLEE_FAIL_b0 0x30
-#define SLEE_FAIL_b1 0x31
-#define SLEE_FAIL_b2 0x32
-#define SLEE_FAIL_b3 0x33
-#define SLEE_FAIL_b4 0x34
-#define SLEE_FAIL_a0 0x40
-#define SLEE_FAIL_a1 0x41
-#define SLEE_FAIL_a2 0x42
-#define SLEE_FAIL_a3 0x43
-#define SLEE_FAIL_a4 0x44
-#define SLEE_FAIL_d0 0x50
-#define SLEE_FAIL_d1 0x51
-#define SLEE_FAIL_d2 0x52
-#define SLEE_FAIL_d3 0x53
-#define SLEE_FAIL_d4 0x54
+#define SLEE_FAIL_q0 0x11
+#define SLEE_FAIL_q1 0x12
+#define SLEE_FAIL_q2 0x13
+#define SLEE_FAIL_n0 0x21
+#define SLEE_FAIL_n1 0x22
+#define SLEE_FAIL_n2 0x23
+#define SLEE_FAIL_c0 0x31
+#define SLEE_FAIL_c1 0x32
+#define SLEE_FAIL_c2 0x33
+#define SLEE_FAIL_c3 0x34
+#define SLEE_FAIL_c4 0x35
+#define SLEE_FAIL_b0 0x41
+#define SLEE_FAIL_b1 0x42
+#define SLEE_FAIL_b2 0x43
+#define SLEE_FAIL_b3 0x44
+#define SLEE_FAIL_b4 0x45
+#define SLEE_FAIL_a0 0x51
+#define SLEE_FAIL_a1 0x52
+#define SLEE_FAIL_a2 0x53
+#define SLEE_FAIL_a3 0x54
+#define SLEE_FAIL_a4 0x55
+#define SLEE_FAIL_d0 0x61
+#define SLEE_FAIL_d1 0x62
+#define SLEE_FAIL_d2 0x63
+#define SLEE_FAIL_d3 0x64
+#define SLEE_FAIL_d4 0x65
+#define SLEE_FAIL_f0 0x71
+#define SLEE_FAIL_f1 0x72
 
 	//Fail Flags for fli_stack operations:
 #define STACK_FAIL_MALLOC 0x10
@@ -82,7 +84,6 @@ static char fail_stack;
 int SLEE_init(void)
 {
 	STK_init(slee_stack);
-	slee_input = NULL;
 	slee_expr = NULL;
 	fail_state = 0x00;
 	fail_stack = 0x00;
@@ -90,7 +91,6 @@ int SLEE_init(void)
 
 int SLEE_reinit(void)
 {
-	slee_input = NULL;
 	slee_expr = NULL;
 	fail_state = 0x00;
 	fail_stack = 0x00;
@@ -152,13 +152,31 @@ void* STATE_d1(void);
 void* STATE_d2(void);
 void* STATE_d3(void);
 void* STATE_d4(void);
+	//Final/Success States
+void* STATE_f0(void);
+void* STATE_f1(void);
+void* STATE_s0(void);
+void* STATE_s1(void);
 
 /* Transition Function 'sub-function' routine definitions: */
 	//Main
 void* STATE_q0(void)
 {
+	/*printf("q0 ");*/
+
 	switch(SLEE_next_symbol())
 	{
+		case 0: //end of input string
+			switch(SLEE_pop())
+			{
+				case '1':
+					return (void *) STATE_f0;
+				case '0':
+					return (void *) STATE_f1;
+				default:
+					fail_state = SLEE_FAIL_q0;
+					return (void *) NULL;
+			}
 		case '1':
 			return (void *) STATE_q1;
 		case '0':
@@ -177,12 +195,15 @@ void* STATE_q0(void)
 			fail_state = SLEE_FAIL_q0;
 			return (void *) NULL;
 	}
-	return NULL;
+	fail_state = SLEE_FAIL_q0;
+	return (void *) NULL;
 }
 
 
 void* STATE_q1(void)
 {
+	/*printf("q1 ");*/
+
 	switch(SLEE_push('1'))
 	{
 		case 0:
@@ -205,6 +226,8 @@ void* STATE_q1(void)
 
 void* STATE_q2(void)
 {
+	/*printf("q2 ");*/
+
 	switch(SLEE_push('0'))
 	{
 		case 0:
@@ -228,6 +251,8 @@ void* STATE_q2(void)
 	//Negation
 void* STATE_n0(void)
 {
+	/*printf("n0 ");*/
+
 	switch(SLEE_pop())
 	{
 		case '1':
@@ -249,6 +274,8 @@ void* STATE_n0(void)
 
 void* STATE_n1(void)
 {
+	/*printf("n1 ");*/
+
 	switch(SLEE_push('0'))
 	{
 		case 0:
@@ -271,6 +298,8 @@ void* STATE_n1(void)
 
 void* STATE_n2(void)
 {
+	/*printf("n2 ");*/
+
 	switch(SLEE_push('1'))
 	{
 		case 0:
@@ -294,6 +323,8 @@ void* STATE_n2(void)
 	//Conditional
 void* STATE_c0(void)
 {
+	/*printf("c0 ");*/
+
 	switch(SLEE_pop())
 	{
 		case '1':
@@ -315,6 +346,8 @@ void* STATE_c0(void)
 
 void* STATE_c1(void)
 {
+	/*printf("c1 ");*/
+
 	switch(SLEE_pop())
 	{
 		case '1':
@@ -336,6 +369,8 @@ void* STATE_c1(void)
 
 void* STATE_c2(void)
 {
+	/*printf("c2 ");*/
+
 	switch(SLEE_push('1'))
 	{
 		case 0:
@@ -358,6 +393,8 @@ void* STATE_c2(void)
 
 void* STATE_c3(void)
 {
+	/*printf("c3 ");*/
+
 	switch(SLEE_pop())
 	{
 		case '1':
@@ -379,6 +416,8 @@ void* STATE_c3(void)
 
 void* STATE_c4(void)
 {
+	/*printf("c4 ");*/
+
 	switch(SLEE_push('0'))
 	{
 		case 0:
@@ -402,6 +441,8 @@ void* STATE_c4(void)
 	//Biconditional
 void* STATE_b0(void)
 {
+	/*printf("b0 ");*/
+
 	switch(SLEE_pop())
 	{
 		case '1':
@@ -423,6 +464,8 @@ void* STATE_b0(void)
 
 void* STATE_b1(void)
 {
+	/*printf("b1 ");*/
+
 	switch(SLEE_pop())
 	{
 		case '1':
@@ -444,6 +487,8 @@ void* STATE_b1(void)
 
 void* STATE_b2(void)
 {
+	/*printf("b2 ");*/
+
 	switch(SLEE_pop())
 	{
 		case '1':
@@ -465,6 +510,8 @@ void* STATE_b2(void)
 
 void* STATE_b3(void)
 {
+	/*printf("b3 ");*/
+
 	switch(SLEE_push('1'))
 	{
 		case 0:
@@ -487,6 +534,8 @@ void* STATE_b3(void)
 
 void* STATE_b4(void)
 {
+	/*printf("b4 ");*/
+
 	switch(SLEE_push('0'))
 	{
 		case 0:
@@ -509,6 +558,8 @@ void* STATE_b4(void)
 	//Conjunction
 void* STATE_a0(void)
 {
+	/*printf("a0 ");*/
+
 	switch(SLEE_pop())
 	{
 		case '1':
@@ -530,6 +581,8 @@ void* STATE_a0(void)
 
 void* STATE_a1(void)
 {
+	/*printf("a1 ");*/
+
 	switch(SLEE_pop())
 	{
 		case '1':
@@ -551,6 +604,8 @@ void* STATE_a1(void)
 
 void* STATE_a2(void)
 {
+	/*printf("a2 ");*/
+
 	switch(SLEE_pop())
 	{
 		case '1':
@@ -572,6 +627,8 @@ void* STATE_a2(void)
 
 void* STATE_a3(void)
 {
+	/*printf("a3 ");*/
+
 	switch(SLEE_push('1'))
 	{
 		case 0:
@@ -594,6 +651,8 @@ void* STATE_a3(void)
 
 void* STATE_a4(void)
 {
+	/*printf("a4 ");*/
+
 	switch(SLEE_push('0'))
 	{
 		case 0:
@@ -617,6 +676,8 @@ void* STATE_a4(void)
 	//Disjunction
 void* STATE_d0(void)
 {
+	/*printf("d0 ");*/
+
 	switch(SLEE_pop())
 	{
 		case '1':
@@ -638,6 +699,8 @@ void* STATE_d0(void)
 
 void* STATE_d1(void)
 {
+	/*printf("d1 ");*/
+
 	switch(SLEE_pop())
 	{
 		case '1':
@@ -659,6 +722,8 @@ void* STATE_d1(void)
 
 void* STATE_d2(void)
 {
+	/*printf("d2 ");*/
+
 	switch(SLEE_pop())
 	{
 		case '1':
@@ -680,6 +745,8 @@ void* STATE_d2(void)
 
 void* STATE_d3(void)
 {
+	/*printf("d3 ");*/
+
 	switch(SLEE_push('1'))
 	{
 		case 0:
@@ -702,6 +769,8 @@ void* STATE_d3(void)
 
 void* STATE_d4(void)
 {
+	/*printf("d4 ");*/
+
 	switch(SLEE_push('0'))
 	{
 		case 0:
@@ -721,23 +790,78 @@ void* STATE_d4(void)
 	return (void *) NULL;
 }
 
+void* STATE_f0(void)
+{
+	/*printf("f0 ");*/
+
+	switch(SLEE_pop())
+	{
+		case 0:
+			return (void *) STATE_s0;
+		default:
+			fail_state = SLEE_FAIL_f0;
+			break;
+	}
+
+	return (void *) NULL;
+}
+
+void* STATE_f1(void)
+{
+	/*printf("f1 ");*/
+
+	switch(SLEE_pop())
+	{
+		case 0:
+			return (void *) STATE_s1;
+		default:
+			fail_state = SLEE_FAIL_f1;
+			break;
+	}
+
+	return (void *) NULL;
+}
+
+void* STATE_s0(void)
+{
+	/*printf("s0 ");*/
+
+	slee_result = '1';
+	return (void *) NULL;
+}
+
+void* STATE_s1(void)
+{
+	/*printf("s1 ");*/
+
+	slee_result = '0';
+	return (void *) NULL;
+}
 
 int SLEE_eval(char* expr, char* result)
 {
-		//locals
-	void* (*cur_state)(void) = STATE_q0;
-
-		//init of args/globals
-	*result = 'E';
+	int ret;
+	void* (*cur_state)(void) = STATE_q0; //initial state of pda
 
 	if(expr ? (slee_expr = expr, 0) : 1)
-		return -1; //expr == (nil)
+		return -2; //expr == (nil)
 
-	while(cur_state)
+	while(cur_state) //execute state machine transitions until 'done'
 		cur_state = (void* (*)(void)) cur_state();
 
+	if(!fail_state)
+	{
+		*result = slee_result;
+		ret = 0;
+	}
+	else
+	{
+		*result = 'E';
+		ret = -1;
+	}
+
 	SLEE_reinit();
-	return 0;
+	return ret;
 }
 	
 
