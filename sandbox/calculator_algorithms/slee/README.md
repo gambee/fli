@@ -1,2 +1,0 @@
-# Sentential Logic Expression Evalutator
-
