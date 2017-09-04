@@ -10,6 +10,13 @@ char TT_false[] = "\"F\"";
 
 int dot_node_index;
 
+struct node
+{
+	int token_type;
+	int token_value;
+	struct node *left, *right;
+};
+
 char* get_token_text(int token_type)
 {
 	switch(token_type)
@@ -33,12 +40,28 @@ char* get_token_text(int token_type)
 	}
 }
 
-struct node
+char get_slee_token(int token_type)
 {
-	int token_type;
-	int token_value;
-	struct node *left, *right;
-};
+	switch(token_type)
+	{
+		case CONDT:
+			return SLEE_IF;
+		case BICND:
+			return SLEE_IFF;
+		case CJNCT:
+			return SLEE_AND;
+		case DJNCT:
+			return SLEE_OR;
+		case '~':
+			return SLEE_NOT;
+		case 'T': 
+			return SLEE_TRUE;
+		case 'F':
+			return SLEE_FALSE;
+		default:
+			return NULL;
+	}
+}
 
 struct node* new_node(int token_type, struct node *left, struct node *right)
 {
@@ -55,7 +78,23 @@ int set_token_value(struct node* root, int new_value)
 	return (int) (root ? root->token_value = new_value : 0);
 }
 
-int rec_print_tree(struct node* root, FILE* file)
+int rec_print_as_slee(struct node* root, FILE* file)
+{
+	int count = 0;
+	if(root)
+	{
+		if(root->left)
+			count += rec_print_as_slee(root->left);
+		if(root->right)
+			count += rec_print_as_slee(root->right);
+		
+		return count;
+	}
+	else return 0;
+}
+
+
+int rec_print_as_dot(struct node* root, FILE* file)
 {
 	int cur_dot_index = ++dot_node_index;
 	int count = 0;
@@ -65,12 +104,12 @@ int rec_print_tree(struct node* root, FILE* file)
 		if(root->left)
 		{
 			fprintf(file, "%d->%d\n", cur_dot_index, dot_node_index + 1);
-			count += 1 + rec_print_tree(root->left, file);
+			count += 1 + rec_print_as_dot(root->left, file);
 		}
 		if(root->right)
 		{
 			fprintf(file, "%d->%d\n", cur_dot_index, dot_node_index + 1);
-			count += 1 + rec_print_tree(root->right, file);
+			count += 1 + rec_print_as_dot(root->right, file);
 		}
 		return count;
 	}
@@ -81,7 +120,7 @@ int print_as_dot(FILE* file, struct node* root)
 {
 	int nodes = 0;
 	fprintf(file, "digraph AST {\n");
-	nodes = rec_print_tree(root, file);
+	nodes = rec_print_as_dot(root, file);
 	fprintf(file, "}");
 	return nodes;
 }
