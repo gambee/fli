@@ -59,17 +59,5 @@ int main(int argc, char **argv)
 	write_postfix(ast_root, &postfix);
 
 	printf("postfix: %s\n", postfix);
-	/*
-	if(argc == 2)
-		save_as_dot(argv[1], ast_root);
-	else
-		print_as_dot(stdout, ast_root);
-		*/
-/*
-	struct node tmp;
-	printf("ret of set_token_value(&tmp, 5)\n", set_token_value(&tmp, 5));
-	printf("value of tmp.token_value: %d\n", tmp.token_value);
-	printf("ret of set_token_value(NULL, 12): %d\n", set_token_value(NULL, 12));
-	*/
 	return 0;
 }

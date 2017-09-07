@@ -2,13 +2,13 @@
 #include "slee_alphabet.h"
 #include "fli_buffer.h"
 
-char TT_condt[] = "\"->\"";
-char TT_bicnd[] = "\"<->\"";
-char TT_cjnct[] = "\"^\"";
-char TT_djnct[] = "\"v\"";
-char TT_negtn[] = "\"~\"";
-char TT_true [] = "\"T\"";
-char TT_false[] = "\"F\"";
+static char TT_condt[] = "\"->\"";
+static char TT_bicnd[] = "\"<->\"";
+static char TT_cjnct[] = "\"^\"";
+static char TT_djnct[] = "\"v\"";
+static char TT_negtn[] = "\"~\"";
+static char TT_true [] = "\"T\"";
+static char TT_false[] = "\"F\"";
 
 int dot_node_index;
 
@@ -108,9 +108,6 @@ int write_postfix(struct node* root, char** str)
 	BUF_strflush(&buffer, str);
 	return ret;
 }
-
-
-
 
 
 int rec_print_as_dot(struct node* root, FILE* file)

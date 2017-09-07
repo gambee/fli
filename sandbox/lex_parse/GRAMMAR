@@ -1,0 +1,60 @@
+GRAMMAR: This file contains the language specification for the small language used by the 
+calculator to represent logical expressions (without variables/identifiers).
+
+Underlying data type used by the calculator: <value> ::= "T" | "F" (case Sensitive)
+
+The Tokens:
+	<operation>		<token>		<example>(Evaluates To) 
+
+	Conditional		->		T->F (False)
+	Biconditional		<->		F<->F (True)
+	Conjunction		^		T^F (False)
+	Disjunction		v  		TvF (True)
+	Negation		~		~F (True)
+
+Precedence and Parenthesis:
+	For now, the intended functionality of the calculator is to throw an error if an expression with
+	more than one operation is passed to it without explicitly specifying parenthetical precedence. In 
+	other words, default operator precedence is intended to be implemented later, as it is not crucial
+	functionality at the moment.
+
+Whitespace:
+	The intended functionality is to disregard whitespace between tokens, but NOT within them.
+	This means that the input '->' will be lexed into the '<conditional>' token, but '- >' will not, and should
+	throw a lexical error. 
+
+The Grammar:
+	<formula>	::=	<expression>
+			|	'~' <expression>
+			|	<expression> <connective> <expression>
+
+	<expression>	::=	<value>
+			|	'(' <formula> ')'
+
+	<connective>	::=	'->' | '<->' | '^' | 'v'
+
+	<value>		::=	'T' | 'F'
+		NOTE: Parenthesis required becasue precedence is not implemented.
+
+Cayley Tables For Operations:
+	<conditional>:	<biconditional>
+	-> | T | F |	<-> | T | F |
+	------------	-------------
+	 T | T | F |	  T | T | F |
+	------------	-------------
+	 F | T | T |	  F | F | T |
+	------------	-------------
+
+	<conjunction>	<disjunction>
+	^ | T | F |	v | T | F |
+	------------	-----------
+	T | T | F |	T | T | T |
+	------------	-----------
+	F | F | F |	F | T | F |
+	------------	-----------
+
+	<negation>
+	 ~  | T | F |
+	-------------
+	N/A | F | T |
+	-------------
