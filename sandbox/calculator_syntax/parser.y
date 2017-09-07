@@ -53,8 +53,12 @@ value: 'T'			{$$ = (int) 'T';}
 
 int main(int argc, char **argv)
 {
+	char* postfix = NULL;
+
 	yyparse();
-	rec_print_tree(ast_root, stdout);
+	write_postfix(ast_root, &postfix);
+
+	printf("postfix: %s\n", postfix);
 	/*
 	if(argc == 2)
 		save_as_dot(argv[1], ast_root);

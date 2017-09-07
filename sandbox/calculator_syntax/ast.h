@@ -1,4 +1,6 @@
 #include "parser.tab.h"
+#include "slee_alphabet.h"
+#include "fli_buffer.h"
 
 char TT_condt[] = "\"->\"";
 char TT_bicnd[] = "\"<->\"";
@@ -59,7 +61,7 @@ char get_slee_token(int token_type)
 		case 'F':
 			return SLEE_FALSE;
 		default:
-			return NULL;
+			return 0;
 	}
 }
 
@@ -78,20 +80,37 @@ int set_token_value(struct node* root, int new_value)
 	return (int) (root ? root->token_value = new_value : 0);
 }
 
-int rec_print_as_slee(struct node* root, FILE* file)
+int rec_write_postfix(struct node* root, struct BUF_buffer *buf)
 {
 	int count = 0;
+
 	if(root)
 	{
 		if(root->left)
-			count += rec_print_as_slee(root->left);
+			count += rec_write_postfix(root->left, buf);
 		if(root->right)
-			count += rec_print_as_slee(root->right);
+			count += rec_write_postfix(root->right, buf);
 		
+		BUF_putc(buf, get_slee_token(root->token_type));
 		return count;
 	}
 	else return 0;
 }
+
+int write_postfix(struct node* root, char** str)
+{
+	int ret;
+	struct BUF_buffer buffer;
+	
+	BUF_init(&buffer);
+	ret = rec_write_postfix(root, &buffer);
+	*str = *str ? (free(*str), NULL) : NULL;
+	BUF_strflush(&buffer, str);
+	return ret;
+}
+
+
+
 
 
 int rec_print_as_dot(struct node* root, FILE* file)
