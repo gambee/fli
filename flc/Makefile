@@ -6,6 +6,9 @@ dbg: lex.yy.c bisonFiles
 flc: lex.yy.c bisonFiles
 	gcc -lfl lex.yy.c parser.tab.c -o $@
 
+flc_macOS: lex.yy.c bisonFiles
+	gcc -ll lex.yy.c parser.tab.c -o $@
+
 lex.yy.c: lexer.l
 	flex $<
 
