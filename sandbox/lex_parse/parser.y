@@ -29,7 +29,7 @@ start: formula {ast_root = $1;}
 
 formula:
 		expr		{$$ = $1;}
-	|	'~' expr 	{$$ = new_node('~', $2, NULL);}
+	|	'~' expr 	{$$ = new_node('~', NULL, $2);}
 	|	expr conn expr	{$$ = new_node($2, $1, $3);}
 ;
 

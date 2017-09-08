@@ -1260,7 +1260,7 @@ yyreduce:
 
   case 5:
 #line 59 "parser.y" /* yacc.c:1646  */
-    {(yyval.node_ptr) = new_node('~', (yyvsp[0].node_ptr), NULL);}
+    {(yyval.node_ptr) = new_node('~', NULL, (yyvsp[0].node_ptr));}
 #line 1265 "parser.tab.c" /* yacc.c:1646  */
     break;
 
