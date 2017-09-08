@@ -1,4 +1,4 @@
-default: flc clean
+default: flc 
 
 dbg: lex.yy.c bisonFiles
 	gcc -g -lfl lex.yy.c parser.tab.c -o $@
