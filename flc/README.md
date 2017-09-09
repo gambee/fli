@@ -7,4 +7,4 @@ logical operations ~, ->, <->, v, and ^ which are negation, conditional, bicondi
 Invoke the flc by merely running it (i.e. ./flc). It will then read logical expressions from stdin, printing the results to stdout.
 
 ## Build
-Simply clone the repo and run Make. If you have issues, then you probably are on windows, and have bigger problems than being unable to build my program.
+Simply clone the repo and run Make. On Mac's specify the osx rule: 'make osx'. If you have issues, then you probably are on windows, and have bigger problems than being unable to build my program.

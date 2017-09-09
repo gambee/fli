@@ -211,7 +211,7 @@ int print_as_dot(FILE* file, struct ast_node* root)
 int save_as_dot(char* filename, struct ast_node* root)
 {
 	FILE* file = NULL;
-	if(file = fopen(filename, "w"))
+	if((file = fopen(filename, "w")))
 		return print_as_dot(file, root);
 	//else
 	fprintf(stderr, "Failed open file: %s\n", filename);
