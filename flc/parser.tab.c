@@ -393,7 +393,7 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  11
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   24
+#define YYLAST   20
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  12
@@ -449,8 +449,8 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    32,    32,    41,    58,    59,    60,    64,    65,    69,
-      70,    71,    72,    75,    76
+       0,    32,    32,    41,    58,    60,    64,    65,    66,    70,
+      71,    72,    73,    76,    77
 };
 #endif
 
@@ -489,8 +489,8 @@ static const yytype_uint16 yytoknum[] =
      STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-      -5,    13,    -5,    -6,    -6,     1,    -6,    14,    -6,    -6,
-       4,    -6,    -6,    -6,    -6,    -6,    -6,    13,    -6,    -6
+      -5,    -5,    -5,    -6,    -6,     1,    -6,    14,    -6,    -6,
+       4,    -6,    -6,    -6,    -6,    -6,    -6,    -5,    -6,    -6
 };
 
   /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -498,8 +498,8 @@ static const yytype_int8 yypact[] =
      means the default is an error.  */
 static const yytype_uint8 yydefact[] =
 {
-       0,     0,     0,    13,    14,     0,     2,     4,     7,     5,
-       0,     1,     3,     9,    10,    11,    12,     0,     8,     6
+       0,     0,     0,    13,    14,     0,     2,     4,     6,     7,
+       0,     1,     3,     9,    10,    11,    12,     0,     8,     5
 };
 
   /* YYPGOTO[NTERM-NUM].  */
@@ -521,14 +521,14 @@ static const yytype_uint8 yytable[] =
 {
        9,    11,     1,     2,    10,     3,     4,    12,     1,     2,
        0,     3,     4,    18,     0,     0,    19,    13,    14,    15,
-      16,     2,     0,     3,     4
+      16
 };
 
 static const yytype_int8 yycheck[] =
 {
        1,     0,     7,     8,     2,    10,    11,     5,     7,     8,
       -1,    10,    11,     9,    -1,    -1,    17,     3,     4,     5,
-       6,     8,    -1,    10,    11
+       6
 };
 
   /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
@@ -542,14 +542,14 @@ static const yytype_uint8 yystos[] =
   /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
 static const yytype_uint8 yyr1[] =
 {
-       0,    12,    13,    13,    14,    14,    14,    15,    15,    16,
+       0,    12,    13,    13,    14,    14,    15,    15,    15,    16,
       16,    16,    16,    17,    17
 };
 
   /* YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.  */
 static const yytype_uint8 yyr2[] =
 {
-       0,     2,     1,     2,     1,     2,     3,     1,     3,     1,
+       0,     2,     1,     2,     1,     3,     1,     2,     3,     1,
        1,     1,     1,     1,     1
 };
 
@@ -1259,61 +1259,61 @@ yyreduce:
     break;
 
   case 5:
-#line 59 "parser.y" /* yacc.c:1646  */
-    {(yyval.node_ptr) = new_node('~', NULL, (yyvsp[0].node_ptr));}
+#line 60 "parser.y" /* yacc.c:1646  */
+    {(yyval.node_ptr) = new_node((yyvsp[-1].token_type), (yyvsp[-2].node_ptr), (yyvsp[0].node_ptr));}
 #line 1265 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 6:
-#line 60 "parser.y" /* yacc.c:1646  */
-    {(yyval.node_ptr) = new_node((yyvsp[-1].token_type), (yyvsp[-2].node_ptr), (yyvsp[0].node_ptr));}
+#line 64 "parser.y" /* yacc.c:1646  */
+    {(yyval.node_ptr) = new_node((yyvsp[0].token_type), NULL, NULL); }
 #line 1271 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 7:
-#line 64 "parser.y" /* yacc.c:1646  */
-    {(yyval.node_ptr) = new_node((yyvsp[0].token_type), NULL, NULL); }
+#line 65 "parser.y" /* yacc.c:1646  */
+    {(yyval.node_ptr) = new_node('~', NULL, (yyvsp[0].node_ptr)); }
 #line 1277 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 8:
-#line 65 "parser.y" /* yacc.c:1646  */
+#line 66 "parser.y" /* yacc.c:1646  */
     {(yyval.node_ptr) = (yyvsp[-1].node_ptr);}
 #line 1283 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 9:
-#line 69 "parser.y" /* yacc.c:1646  */
+#line 70 "parser.y" /* yacc.c:1646  */
     {(yyval.token_type) = CONDT;}
 #line 1289 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 10:
-#line 70 "parser.y" /* yacc.c:1646  */
+#line 71 "parser.y" /* yacc.c:1646  */
     {(yyval.token_type) = BICND;}
 #line 1295 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 11:
-#line 71 "parser.y" /* yacc.c:1646  */
+#line 72 "parser.y" /* yacc.c:1646  */
     {(yyval.token_type) = CJNCT;}
 #line 1301 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 12:
-#line 72 "parser.y" /* yacc.c:1646  */
+#line 73 "parser.y" /* yacc.c:1646  */
     {(yyval.token_type) = DJNCT;}
 #line 1307 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 13:
-#line 75 "parser.y" /* yacc.c:1646  */
+#line 76 "parser.y" /* yacc.c:1646  */
     {(yyval.token_type) = (int) 'T';}
 #line 1313 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 14:
-#line 76 "parser.y" /* yacc.c:1646  */
+#line 77 "parser.y" /* yacc.c:1646  */
     {(yyval.token_type) = (int) 'F';}
 #line 1319 "parser.tab.c" /* yacc.c:1646  */
     break;
@@ -1547,7 +1547,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 79 "parser.y" /* yacc.c:1906  */
+#line 80 "parser.y" /* yacc.c:1906  */
 
 
 int main(int argc, char **argv)

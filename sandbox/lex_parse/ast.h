@@ -2,21 +2,21 @@
 #include "slee_alphabet.h"
 #include "fli_buffer.h"
 
-static char TT_condt[] = "\"->\"";
-static char TT_bicnd[] = "\"<->\"";
-static char TT_cjnct[] = "\"^\"";
-static char TT_djnct[] = "\"v\"";
-static char TT_negtn[] = "\"~\"";
-static char TT_true [] = "\"T\"";
-static char TT_false[] = "\"F\"";
+static char TT_condt[] = "->";
+static char TT_bicnd[] = "<->";
+static char TT_cjnct[] = "^";
+static char TT_djnct[] = "v";
+static char TT_negtn[] = "~";
+static char TT_true [] = "T";
+static char TT_false[] = "F";
 
 int dot_node_index;
 
-struct node
+struct ast_node
 {
 	int token_type;
 	int token_value;
-	struct node *left, *right;
+	struct ast_node *left, *right;
 };
 
 char* get_token_text(int token_type)
@@ -65,22 +65,22 @@ char get_slee_token(int token_type)
 	}
 }
 
-struct node* new_node(int token_type, struct node *left, struct node *right)
+struct ast_node* new_node(int token_type, struct ast_node *left, struct ast_node *right)
 {
 	dot_node_index = 0;
-	struct node* tmp = (struct node*) malloc( sizeof(struct node));
+	struct ast_node* tmp = (struct ast_node*) malloc( sizeof(struct ast_node));
 	tmp->token_type = token_type;
 	tmp->left = left;
 	tmp->right = right;
 	return tmp;
 }
 
-int set_token_value(struct node* root, int new_value)
+int set_token_value(struct ast_node* root, int new_value)
 {
 	return (int) (root ? root->token_value = new_value : 0);
 }
 
-int rec_write_postfix(struct node* root, struct BUF_buffer *buf)
+int rec_write_postfix(struct ast_node* root, struct BUF_buffer *buf)
 {
 	int count = 0;
 
@@ -92,12 +92,12 @@ int rec_write_postfix(struct node* root, struct BUF_buffer *buf)
 			count += rec_write_postfix(root->right, buf);
 		
 		BUF_putc(buf, get_slee_token(root->token_type));
-		return count;
 	}
-	else return 0;
+	
+	return count;
 }
 
-int write_postfix(struct node* root, char** str)
+int write_postfix(struct ast_node* root, char** str)
 {
 	int ret;
 	struct BUF_buffer buffer;
@@ -109,8 +109,75 @@ int write_postfix(struct node* root, char** str)
 	return ret;
 }
 
+int rec_write_infix(struct ast_node* root, struct BUF_buffer *buf)
+{
+	int count = 0;
 
-int rec_print_as_dot(struct node* root, FILE* file)
+	if(root)
+	{
+		if(root->left)
+		{
+			switch(root->left->token_type)
+			{
+				case '~':
+				case 'T': 
+				case 'F':
+					count += rec_write_infix(root->left, buf);
+					break;
+				case CONDT:
+				case BICND:
+				case CJNCT:
+				case DJNCT:
+				default:
+					BUF_putc(buf, '(');
+					count += rec_write_infix(root->left, buf);
+					BUF_putc(buf, ')');
+					break;
+			}
+		}
+
+		BUF_puts(buf, get_token_text(root->token_type)); 
+
+		if(root->right)
+		{
+			switch(root->right->token_type)
+			{
+				case '~':
+				case 'T': 
+				case 'F':
+					count += rec_write_infix(root->right, buf);
+					break;
+				case CONDT:
+				case BICND:
+				case CJNCT:
+				case DJNCT:
+				default:
+					BUF_putc(buf, '(');
+					count += rec_write_infix(root->right, buf);
+					BUF_putc(buf, ')');
+					break;
+			}
+
+		}
+	}
+	return count;
+}
+
+int write_infix(struct ast_node* root, char **str)
+{
+	int ret;
+	struct BUF_buffer buffer;
+	
+	BUF_init(&buffer);
+	ret = rec_write_infix(root, &buffer);
+	*str = *str ? (free(*str), NULL) : NULL;
+	BUF_strflush(&buffer, str);
+	return ret;
+}
+	
+
+
+int rec_print_as_dot(struct ast_node* root, FILE* file)
 {
 	int cur_dot_index = ++dot_node_index;
 	int count = 0;
@@ -132,7 +199,7 @@ int rec_print_as_dot(struct node* root, FILE* file)
 	else return 0;
 }
 	
-int print_as_dot(FILE* file, struct node* root)
+int print_as_dot(FILE* file, struct ast_node* root)
 {
 	int nodes = 0;
 	fprintf(file, "digraph AST {\n");
@@ -141,7 +208,7 @@ int print_as_dot(FILE* file, struct node* root)
 	return nodes;
 }
 	
-int save_as_dot(char* filename, struct node* root)
+int save_as_dot(char* filename, struct ast_node* root)
 {
 	FILE* file = NULL;
 	if(file = fopen(filename, "w"))

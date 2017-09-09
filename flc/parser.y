@@ -56,12 +56,13 @@ formulas:
 
 formula:
 		expr		{$$ = $1;}
-	|	'~' expr 	{$$ = new_node('~', NULL, $2);}
+/*	|	'~' expr 	{$$ = new_node('~', NULL, $2);} */
 	|	expr conn expr	{$$ = new_node($2, $1, $3);}
 ;
 
 expr:
 		value		{$$ = new_node($1, NULL, NULL); }
+	|	'~' expr	{$$ = new_node('~', NULL, $2); }
 	|	'(' formula ')'	{$$ = $2;}
 ;
 
