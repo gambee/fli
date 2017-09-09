@@ -11,7 +11,7 @@
  */
 
 #ifndef SLEE_H
-#	define STATE_H
+#	define SLEE_H
 
 #include "fli_stack.h"
 #include "slee_alphabet.h"
@@ -81,7 +81,7 @@ static char fail_stack;
 
 /* Inititialization Funtion(s): */
 
-int SLEE_init(void)
+void SLEE_init(void)
 {
 	STK_init(slee_stack);
 	slee_expr = NULL;
